@@ -9,11 +9,11 @@ namespace ZooManagement.Models.Database
     public enum AnimalClassification
         { 
             Mammal, 
-            Fish, 
             Bird, 
-            Reptile, 
+            Fish, 
             Insect, 
             Invertebrate,
+            Reptile, 
         }; 
     public class AnimalClass
 

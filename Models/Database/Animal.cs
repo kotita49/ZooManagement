@@ -19,7 +19,7 @@ namespace ZooManagement.Models.Database
         public int AnimalId { get; set; }
         public string AnimalName { get; set; }
         public string Species { get; set; } //maybe move to animal class
-        
+        public List<string> SpeciesList = new List<string>();
         public Sex Sex { get; set; } // might want to do an enum
         
         public DateTime DateOfBirth { get; set; }
@@ -27,6 +27,7 @@ namespace ZooManagement.Models.Database
 
         [ForeignKey ("AnimalClass")]
         public int AnimalClassId { get; set; }
+        // public string AnimalClass { get; set; }
         public AnimalClass AnimalClass { get; set; }       
     }
 

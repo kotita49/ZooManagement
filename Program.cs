@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.DependencyInjection;
+using ZooManagement.Data;
 // using ZooManagement.Data;
 //using ZooManagement.Models.Database;
 
@@ -32,11 +33,13 @@ namespace ZooManagement
             var context = services.GetRequiredService<ZooManagementDbContext>();
             context.Database.EnsureCreated();
 
-            // if (!context.AnimalClasses.Any())
-            // {
-            //     var users = SampleUsers.GetUsers();
-            //     context.Users.AddRange(users);
-            //     context.SaveChanges();
+            if (!context.AnimalClasses.Any())
+            {
+                var animalClasses = SampleAnimalClasses.GetClasses();
+                context.AnimalClasses.AddRange(animalClasses);
+                context.SaveChanges();
+
+                var animals = SampleAnimalClasses.GetAnimals();
 
             //     var posts = SamplePosts.GetPosts();
             //     context.Posts.AddRange(posts);
@@ -45,7 +48,7 @@ namespace ZooManagement
             //     var interactions = SampleInteractions.GetInteractions();
             //     context.Interactions.AddRange(interactions);
             //     context.SaveChanges();
-            // }
+            }
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>

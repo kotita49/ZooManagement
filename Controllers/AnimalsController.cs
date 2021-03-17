@@ -48,8 +48,20 @@ namespace ZooManagement.Controllers
             var responseViewModel = new AnimalResponse(animal);
             return Created(url, responseViewModel);
         }
+        // [HttpGet("{id}/species")]
+        // public ActionResult<AnimalListResponse> GetByClassId([FromRoute] int id)
+        // {
+        //     var speciesInClass _animals.GetByClassId(id)
+        //     var responseViewModel = new AnimalListResponse(speciesInClass);
+        //     return Created(Url, responseViewModel);
+        // };
 
-        //create post request to insert new animal into the database :)
+        [HttpGet("species")]
+        public ActionResult<AnimalSpeciesResponse> GetSpecies()
+        {
+            var allSpecies = _animals.GetAllSpecies();
+            return new AnimalSpeciesResponse(allSpecies);
+        }
 
         // [HttpGet]
         // public IEnumerable<WeatherForecast> Get()

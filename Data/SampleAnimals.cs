@@ -5,7 +5,7 @@
 // using System;
 // using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 
-// namespace ZooManagement
+// namespace ZooManagement.Data
 // {
 //     public static class SampleAnimals
 //     {

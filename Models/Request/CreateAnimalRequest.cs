@@ -12,6 +12,9 @@ namespace ZooManagement.Models.Request
         
         [Required]
         public string Species { get; set; }
+        [Required]
+        [JsonConverter(typeof(JsonStringEnumConverter))]
+        public AnimalClassification AnimalClass { get; set; }
         
         [Required]
         [JsonConverter(typeof(JsonStringEnumConverter))]
@@ -20,11 +23,5 @@ namespace ZooManagement.Models.Request
         public DateTime DateOfBirth { get; set; }
       
         public DateTime DateAquired { get; set; }
-
-        
-        // [Required]
-        // [JsonConverter(typeof(JsonStringEnumConverter))]
-        
-        // public AnimalClassification AnimalClassification { get; set; }
     }
 }

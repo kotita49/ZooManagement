@@ -12,17 +12,12 @@ namespace ZooManagement.Repositories
 {
     public interface IAnimalsRepo
     {
-
-        // IEnumerable<User> Search(UserSearchRequest search);
-        // int Count(UserSearchRequest search);
         Animal GetById(int id);
         Animal GetByAnimalName(string animalName);
         Animal Create(CreateAnimalRequest newAnimal);
-        
-        // User Create(CreateUserRequest newUser);
-        // User Update(int id, UpdateUserRequest update);
-        void Delete(int id);
-    // 
+        List<string> GetAllSpecies();
+     
+        void Delete(int id); 
     }
     
     public class AnimalsRepo : IAnimalsRepo
@@ -60,85 +55,84 @@ namespace ZooManagement.Repositories
         //                         p.Username.ToLower().Contains(search.Search)
         //                     ));
         // }
-
+       
+        
+        
         public Animal GetById(int id)
         {
             return _context.Animals
                 .Single(animal => animal.AnimalId == id);
         }
+
+         public IEnumerable<Animal> GetByClassId(int id)
+        {
+            var animalList=_context.Animals.Where(animal => animal.AnimalClassId == id);
+            return (animalList);        
+        }
+
+        public List<string> GetSpecies(string species)
+        {
+            var AnimalSpeciesList = _context.Animals.Where(animal => animal.Species == species);
+            var SpeciesList = new List<string>();
+            foreach(Animal spec in AnimalSpeciesList)
+            {   
+                SpeciesList.Add(spec.Species);
+            };
+            return (SpeciesList);
+        }
+
+        public List<string> GetAllSpecies()
+        {
+            var AnimalList = _context.Animals;
+            var SpeciesList = new List<string>();
+            foreach(Animal animal in AnimalList)
+            {   
+                SpeciesList.Add(animal.Species);
+            };
+            var NoDuplicatesSpeciesList = SpeciesList.Distinct().ToList();
+            return (NoDuplicatesSpeciesList);
+        }
+
         public Animal GetByAnimalName(string animalName)
         {
             return _context.Animals.FirstOrDefault(animal => animal.AnimalName == animalName);
         }
+         public AnimalClass GetAnimalClass(AnimalClassification animalClass)
+        {
+            return _context.AnimalClasses.FirstOrDefault(v=>v.AnimalClassification == animalClass);
+        }
         public Animal Create(CreateAnimalRequest newAnimal)
         {
+           
+        if(!_context.AnimalClasses.Any(v => v.AnimalClassification == newAnimal.AnimalClass))
+        {
+            AnimalClass animalClass = new AnimalClass()
+            {
+                AnimalClassification = newAnimal.AnimalClass
+            };
+            _context.AnimalClasses.Add(animalClass);
+            _context.SaveChanges();
+        }
         // find the id of the animal classification 
+        //  GetAnimalClassByClassId(int classid)
         // if it doesnt exsist create new id 
         // _context.AnimalClasses.Add(new AnimalClass
         //once we have the id 
-
+        var newAnimalClass = GetAnimalClass(newAnimal.AnimalClass);
         var insertResponse = _context.Animals.Add(new Animal
             {
                 AnimalName = newAnimal.AnimalName,
                 Species = newAnimal.Species,
                 Sex = newAnimal.Sex,
                 DateOfBirth = newAnimal.DateOfBirth,
-                DateAquired = newAnimal.DateAquired
-                //classId= id
+                DateAquired = newAnimal.DateAquired,
+                AnimalClassId= newAnimalClass.AnimalClassId
             });
             _context.SaveChanges();
 
             return insertResponse.Entity;
         }
-        // public Animal Create(CreateUserRequest newUser)
-        // {
-        //     // Generate a salt
-        //     byte[] salt = new byte[128 / 8];
-        //     using (var rng = new RNGCryptoServiceProvider())
-        //     {
-        //         rng.GetBytes(salt);
-        //     }
-
-        //     // Add salt to the password and hash it all
-        //     string HashedPassword = Convert.ToBase64String(KeyDerivation.Pbkdf2(
-        //         password: newUser.Password,
-        //         salt: salt,
-        //         prf: KeyDerivationPrf.HMACSHA1,
-        //         iterationCount: 10000,
-        //         numBytesRequested: 256 / 8));
-
-        //     var insertResponse = _context.Users.Add(new User
-        //     {
-        //         FirstName = newUser.FirstName,
-        //         LastName = newUser.LastName,
-        //         Email = newUser.Email,
-        //         Username = newUser.Username,
-        //         ProfileImageUrl = newUser.ProfileImageUrl,
-        //         CoverImageUrl = newUser.CoverImageUrl,
-        //         Hashed_password = HashedPassword,
-        //         Salt = Convert.ToBase64String(salt)
-        //     });
-        //     _context.SaveChanges();
-
-        //     return insertResponse.Entity;
-        // }
-
-        // public User Update(int id, UpdateUserRequest update)
-        // {
-        //     var user = GetById(id);
-
-        //     user.FirstName = update.FirstName;
-        //     user.LastName = update.LastName;
-        //     user.Username = update.Username;
-        //     user.Email = update.Email;
-        //     user.ProfileImageUrl = update.ProfileImageUrl;
-        //     user.CoverImageUrl = update.CoverImageUrl;
-
-        //     _context.Users.Update(user);
-        //     _context.SaveChanges();
-
-        //     return user;
-        // }
+       
 
         public void Delete(int id)
         {
