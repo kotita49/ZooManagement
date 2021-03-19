@@ -17,12 +17,12 @@ namespace ZooManagement.Models.Database
         }; 
     public class AnimalClass
 
-    { 
-        [Key]
+    { [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int AnimalClassId { get; set; }
 
         public ICollection<Animal> Animals { get; set; }
+        
         public AnimalClassification AnimalClassification { get; set; }
          
     }

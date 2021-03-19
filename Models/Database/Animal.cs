@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-
+using System.Text.Json.Serialization;
 
 namespace ZooManagement.Models.Database
 {
@@ -23,11 +23,13 @@ namespace ZooManagement.Models.Database
         public Sex Sex { get; set; } // might want to do an enum
         
         public DateTime DateOfBirth { get; set; }
-        public DateTime DateAquired { get; set; }
-
-        [ForeignKey ("AnimalClass")]
+        public DateTime DateAcquired { get; set; }
+         [ForeignKey ("AnimalClass")]
         public int AnimalClassId { get; set; }
-        // public string AnimalClass { get; set; }
+       
+        // public AnimalClassification AnimalClassification { get; set; }
+        
+        [JsonConverter(typeof(JsonStringEnumConverter))]
         public AnimalClass AnimalClass { get; set; }       
     }
 

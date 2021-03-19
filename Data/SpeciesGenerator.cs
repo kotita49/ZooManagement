@@ -1,6 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
+using System;
 using ZooManagement.Models.Database;
 
 namespace ZooManagement.Data
@@ -12,28 +13,28 @@ namespace ZooManagement.Data
         public static int NumberOfSpecies = 21;
          private static IList<IList<object>> _species = new List<IList<object>>
         {
-            new List<object> { "Elephant", 1 },
-            new List<object> { "Tiger", 1 },
-            new List<object> { "Seal", 1 },
-            new List<object> { "Kakapo", 2 },
-            new List<object> { "Avocet", 2 },
-            new List<object> { "Barb", 3 },
-            new List<object> { "Axolotl", 3 },
-            new List<object> { "Clown Fish", 3 },
-            new List<object> { "Bull Shark", 3 },
-            new List<object> { "Tiger Butterfly", 4 },
-            new List<object> { "Monarch Butterfly", 4 },
-            new List<object> { "Wasp", 4 },
-            new List<object> { "Mollusc", 5 },
-            new List<object> { "Anteater", 1 },
-            new List<object> { "Artic Fox", 1 },
-            new List<object> { "Artic Hare", 1 },
-            new List<object> { "Python", 6 },
-            new List<object> { "Cobra", 6 },
-            new List<object> { "Snapping Turtle", 6 },
-            new List<object> { "Chameleon", 6 },
-            new List<object> { "Crocodile", 6 },
-            new List<object> { "Gecko", 6 }
+            new List<object> { "Elephant", AnimalClassification.Mammal },
+            new List<object> { "Tiger", AnimalClassification.Mammal },
+            new List<object> { "Seal", AnimalClassification.Mammal },
+            new List<object> { "Kakapo", AnimalClassification.Bird },
+            new List<object> { "Avocet", AnimalClassification.Bird },
+            new List<object> { "Barb", AnimalClassification.Fish },
+            new List<object> { "Axolotl", AnimalClassification.Fish },
+            new List<object> { "Clown Fish", AnimalClassification.Fish },
+            new List<object> { "Bull Shark", AnimalClassification.Fish },
+            new List<object> { "Tiger Butterfly", AnimalClassification.Insect },
+            new List<object> { "Monarch Butterfly", AnimalClassification.Insect },
+            new List<object> { "Wasp", AnimalClassification.Insect },
+            new List<object> { "Mollusc", AnimalClassification.Invertebrate },
+            new List<object> { "Anteater", AnimalClassification.Mammal },
+            new List<object> { "Artic Fox", AnimalClassification.Mammal },
+            new List<object> { "Artic Hare", AnimalClassification.Mammal },
+            new List<object> { "Python", AnimalClassification.Reptile },
+            new List<object> { "Cobra", AnimalClassification.Reptile },
+            new List<object> { "Snapping Turtle", AnimalClassification.Reptile },
+            new List<object> { "Chameleon", AnimalClassification.Reptile },
+            new List<object> { "Crocodile", AnimalClassification.Reptile },
+            new List<object> { "Gecko", AnimalClassification.Reptile }
 
         };
         //mammal = 1
@@ -43,15 +44,32 @@ namespace ZooManagement.Data
         //invetebrate = 5
         //reptile = 6
 
-        public static (string, int) GetSpecies()
+        public static (string, string, int) GetSpecies()
         {
           // we need random number generator here between 0 and 21
             var randomIndex = _random.Next(0, 21);
             var randomSpecies = _species[randomIndex][0].ToString();
-            var randomClassId = Convert.ToInt32(_species[randomIndex][1]);
-            return (randomSpecies, randomClassId);
+            string randomClass = _species[randomIndex][1].ToString();
+            int randomClassId = Convert.ToInt32(_species[randomIndex][1]);
+            return (randomSpecies, randomClass, randomClassId);
         }
-        private static Animal CreateRandomAnimal()
+        // public static List<Animal> GetAnimals()
+
+        // {
+        //     List<Animal> listAnimals = new List<Animal>();
+        //     Animal animal = CreateRandomAnimal();
+        //     while(listAnimals.Count<100)
+        //     {
+        //         listAnimals.Add(animal);
+        //     }
+           
+        //     return listAnimals;
+        // }
+        public static IEnumerable<Animal> GetAnimals()
+        {
+            return Enumerable.Range(0, 100).Select(CreateRandomAnimal);
+        }
+        public static Animal CreateRandomAnimal(int index)
         {
             return new Animal
             {
@@ -59,8 +77,11 @@ namespace ZooManagement.Data
                 Species = GetSpecies().Item1,
                 Sex = NamesGenerator.GetNames().Item2,
                 DateOfBirth = DateGenerator.GetBirthDate(),
-                DateAquired = DateGenerator.GetAcquiredDate(),
-                AnimalClassId = GetSpecies().Item2
+                DateAcquired = DateGenerator.GetAcquiredDate(),
+                AnimalClassId = GetSpecies().Item3 +1,
+                // AnimalClassification = (AnimalClassification)Enum.Parse(typeof(AnimalClassification), GetSpecies().Item2)
+                // AnimalClassification = (AnimalClassification)Enum.Parse(typeof(AnimalClassification), GetSpecies().Item2)
+                
             };
         }
 

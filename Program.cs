@@ -39,7 +39,9 @@ namespace ZooManagement
                 context.AnimalClasses.AddRange(animalClasses);
                 context.SaveChanges();
 
-                var animals = SampleAnimalClasses.GetAnimals();
+                var animals = SpeciesGenerator.GetAnimals();
+                context.Animals.AddRange(animals);
+                context.SaveChanges();
 
             //     var posts = SamplePosts.GetPosts();
             //     context.Posts.AddRange(posts);

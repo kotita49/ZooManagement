@@ -1,5 +1,5 @@
-// using ZooManagement.Models.Database;
 using System;
+using System.Text.Json.Serialization;
 using ZooManagement.Models.Database;
 
 namespace ZooManagement.Models.Response
@@ -14,10 +14,18 @@ namespace ZooManagement.Models.Response
         }
 
         public int AnimalId => _animal.AnimalId;
+
         public string AnimalName => _animal.AnimalName;
+
         public string Species => _animal.Species;
+
         public Sex Sex => _animal.Sex;
+
         public DateTime DateOfBirth => _animal.DateOfBirth;
-        public DateTime DateAquired => _animal.DateAquired;
+
+        public DateTime DateAquired => _animal.DateAcquired;
+
+        // [JsonConverter(typeof (JsonStringEnumConverter))]
+        public string AnimalClass => _animal.AnimalClass.AnimalClassification.ToString();
     }
 }

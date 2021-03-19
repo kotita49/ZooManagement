@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using ZooManagement.Models.Request;
 using ZooManagement.Models.Database;
 using System.Text.Json;
+using ZooManagement.Request;
+using System.Data;
+
 
 namespace ZooManagement.Repositories
 {
@@ -18,6 +21,9 @@ namespace ZooManagement.Repositories
         List<string> GetAllSpecies();
      
         void Delete(int id); 
+        IEnumerable<Animal> Search(AnimalSearchRequest searchRequest);
+        int Count(AnimalSearchRequest searchRequest);
+       
     }
     
     public class AnimalsRepo : IAnimalsRepo
@@ -29,34 +35,98 @@ namespace ZooManagement.Repositories
             _context = context;
         }
         
-        // public IEnumerable<User> Search(UserSearchRequest search)
-        // {
-        //     return _context.Users
-        //         .Where(p => search.Search == null || 
-        //                     (
-        //                         p.FirstName.ToLower().Contains(search.Search) ||
-        //                         p.LastName.ToLower().Contains(search.Search) ||
-        //                         p.Email.ToLower().Contains(search.Search) ||
-        //                         p.Username.ToLower().Contains(search.Search)
-        //                     ))
-        //         .OrderBy(u => u.Username)
-        //         .Skip((search.Page - 1) * search.PageSize)
-        //         .Take(search.PageSize);
-        // }
-
-        // public int Count(UserSearchRequest search)
-        // {
-        //     return _context.Users
-        //         .Count(p => search.Search == null || 
-        //                     (
-        //                         p.FirstName.ToLower().Contains(search.Search) ||
-        //                         p.LastName.ToLower().Contains(search.Search) ||
-        //                         p.Email.ToLower().Contains(search.Search) ||
-        //                         p.Username.ToLower().Contains(search.Search)
-        //                     ));
-        // }
-       
         
+        public IEnumerable<Animal> Search(AnimalSearchRequest searchRequest)
+        {
+            IQueryable<Animal> query = _context.Animals;
+                               
+            if (!string.IsNullOrEmpty(searchRequest.Species))
+            {
+                query = query.Where(e => e.Species.ToLower().Contains(searchRequest.Species.ToLower()));
+                            
+            }
+            if(!string.IsNullOrEmpty(searchRequest.AnimalName))
+            {
+                query = query.Where(e => e.AnimalName.ToLower().Contains(searchRequest.AnimalName.ToLower()));
+            }
+            
+            if(searchRequest.AnimalClass != null)
+            {
+                query=query.Where(e => e.AnimalClass.AnimalClassification == searchRequest.AnimalClass);
+            };
+            if(searchRequest.Age!=0)
+            {
+                int ageSearch = DateTime.Now.Year - searchRequest.Age;
+                query=query.Where(e=>e.DateOfBirth.Year==ageSearch);
+            }
+            if(searchRequest.DateAcquired.HasValue)
+            {
+                query=query.Where(e=>e.DateAcquired >= searchRequest.DateAcquired.Value && e.DateAcquired <searchRequest.DateAcquired.Value.AddDays(1));
+            }
+
+            switch (searchRequest.Order)
+    {
+        case "species":
+            query = query.OrderBy(s => s.Species);
+            break;
+        case "name":
+            query = query.OrderBy(s => s.AnimalName);
+            break;
+        case "class":
+            query = query.OrderBy(s => s.AnimalClass);
+            break;
+             case "acquired":
+            query = query.OrderByDescending(s => s.DateAcquired);
+             break;
+        default:
+            query = query.OrderBy(s => s.Species);
+            break;
+    }
+           
+            return query.Include(u=>u.AnimalClass)
+                .Skip((searchRequest.Page - 1) * searchRequest.PageSize)
+                    .Take(searchRequest.PageSize);
+        }
+                
+              
+           
+        public int Count(AnimalSearchRequest searchRequest)
+        { 
+            IQueryable<Animal> query = _context.Animals;
+           
+             if (!string.IsNullOrEmpty(searchRequest.Species))
+            {
+                query = query.Where(e => e.Species.ToLower().Contains(searchRequest.Species.ToLower()));
+                            
+            }
+            if(!string.IsNullOrEmpty(searchRequest.AnimalName))
+            {
+                query = query.Where(e => e.AnimalName.ToLower().Contains(searchRequest.AnimalName.ToLower()));
+            }
+            
+            if(searchRequest.AnimalClass != null)
+            {
+                query=query.Where(e => (e.AnimalClassId-1) == Convert.ToInt32(searchRequest.AnimalClass));
+            };
+            if(searchRequest.Age!=0)
+            {
+                int ageSearch = DateTime.Now.Year - searchRequest.Age;
+                query=query.Where(e=>e.DateOfBirth.Year==ageSearch);
+            }
+            Console.WriteLine(searchRequest.DateAcquired);
+            if (searchRequest.DateAcquired== null)
+            {
+                Console.WriteLine("Date is null");
+            };
+            if(searchRequest.DateAcquired.HasValue)
+            {
+                query=query.Where(e=>e.DateAcquired >= searchRequest.DateAcquired.Value && e.DateAcquired <searchRequest.DateAcquired.Value.AddDays(1));
+            }
+         return query.Count();
+            
+           
+        }
+       
         
         public Animal GetById(int id)
         {
@@ -113,11 +183,7 @@ namespace ZooManagement.Repositories
             _context.AnimalClasses.Add(animalClass);
             _context.SaveChanges();
         }
-        // find the id of the animal classification 
-        //  GetAnimalClassByClassId(int classid)
-        // if it doesnt exsist create new id 
-        // _context.AnimalClasses.Add(new AnimalClass
-        //once we have the id 
+
         var newAnimalClass = GetAnimalClass(newAnimal.AnimalClass);
         var insertResponse = _context.Animals.Add(new Animal
             {
@@ -125,7 +191,7 @@ namespace ZooManagement.Repositories
                 Species = newAnimal.Species,
                 Sex = newAnimal.Sex,
                 DateOfBirth = newAnimal.DateOfBirth,
-                DateAquired = newAnimal.DateAquired,
+                DateAcquired = newAnimal.DateAquired,
                 AnimalClassId= newAnimalClass.AnimalClassId
             });
             _context.SaveChanges();

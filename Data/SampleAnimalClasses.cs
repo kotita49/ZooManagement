@@ -42,18 +42,10 @@ namespace ZooManagement.Data
         public static IEnumerable<AnimalClass> GetClasses()
         {
             return _animalclasses;
-            //Enumerable.Range(0, 5).Select(CreateClass);
+           
         }
 
-        // private static AnimalClass CreateClass(int index)
-        // {
-        //     AnimalClassification variable = Enum.TryParse(_animalclasses[index], out AnimalClassification _animalclasses[index])
-        //     return new AnimalClass
-        //     {
-        //         AnimalClassification = variable;
-                
-        //     };
-        // }
+       
        
     }
 }

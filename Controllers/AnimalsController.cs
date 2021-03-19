@@ -7,6 +7,8 @@ using Microsoft.Extensions.Logging;
 using ZooManagement.Repositories;
 using ZooManagement.Models.Response;
 using ZooManagement.Models.Request;
+using ZooManagement.Request;
+using ZooManagement.Models.Database;
 
 namespace ZooManagement.Controllers
 {
@@ -48,6 +50,15 @@ namespace ZooManagement.Controllers
             var responseViewModel = new AnimalResponse(animal);
             return Created(url, responseViewModel);
         }
+        [HttpGet("")]
+        // public ActionResult<AnimalListResponse> Search([FromQuery] AnimalSearchRequest searchRequest)
+        public ActionResult<AnimalListResponse> Search([FromQuery] AnimalSearchRequest searchRequest)
+
+        {
+            var animals = _animals.Search(searchRequest);
+            var animalCount = _animals.Count(searchRequest);
+            return AnimalListResponse.Create(searchRequest, animals, animalCount);
+        }
         // [HttpGet("{id}/species")]
         // public ActionResult<AnimalListResponse> GetByClassId([FromRoute] int id)
         // {
@@ -63,17 +74,6 @@ namespace ZooManagement.Controllers
             return new AnimalSpeciesResponse(allSpecies);
         }
 
-        // [HttpGet]
-        // public IEnumerable<WeatherForecast> Get()
-        // {
-        //     var rng = new Random();
-        //     return Enumerable.Range(1, 5).Select(index => new WeatherForecast
-        //     {
-        //         Date = DateTime.Now.AddDays(index),
-        //         TemperatureC = rng.Next(-20, 55),
-        //         Summary = Summaries[rng.Next(Summaries.Length)]
-        //     })
-        //     .ToArray();
-        // }
+        
     }
 }
