@@ -7,18 +7,17 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace ZooManagement.Models.Database
 {
    
-    public class Enclosure
+    public class Zookeeper
 
     {   
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int EnclosureId { get; set; }
-        public string EnclosureName { get; set; }
-        public int MaxCapacity { get; set; }
-        public ICollection<Zookeeper> Zookeepers { get; set; }
+        public int ZookeeperId { get; set; }
+        public string ZookeeperName { get; set; }
+       
+        public ICollection<Enclosure> Enclosures { get; set; }
 
         public ICollection<Animal> Animals { get; set; }
-        
         
    
     }

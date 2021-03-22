@@ -43,17 +43,13 @@ namespace ZooManagement
                 context.Enclosures.AddRange(enclosures);
                 context.SaveChanges();
 
+                var zookeepers = SampleZookeepers.GetZookeepers(context);
+                context.Zookeepers.AddRange(zookeepers);
+                context.SaveChanges();
+
                 var animals = SpeciesGenerator.GetAnimals();
                 context.Animals.AddRange(animals);
                 context.SaveChanges();
-
-            //     var posts = SamplePosts.GetPosts();
-            //     context.Posts.AddRange(posts);
-            //     context.SaveChanges();
-
-            //     var interactions = SampleInteractions.GetInteractions();
-            //     context.Interactions.AddRange(interactions);
-            //     context.SaveChanges();
             }
         }
 

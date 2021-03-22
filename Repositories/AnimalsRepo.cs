@@ -66,7 +66,7 @@ namespace ZooManagement.Repositories
             }
            if (!string.IsNullOrEmpty(searchRequest.EnclosureName))
             {
-                query = query.Where(e => e.Enclosures.EnclosureName.ToLower().Contains(searchRequest.EnclosureName.ToLower()));                
+                query = query.Where(e => e.Enclosure.EnclosureName.ToLower().Contains(searchRequest.EnclosureName.ToLower()));                
             }
 
             switch (searchRequest.Order)
@@ -84,15 +84,15 @@ namespace ZooManagement.Repositories
                     query = query.OrderByDescending(s => s.DateAcquired);
                     break;
                 case "enclosure":
-                    query = query.OrderBy(s => s.Enclosures.EnclosureId);
+                    query = query.OrderBy(s => s.Enclosure.EnclosureId);
                     break;
                 default:
-                    query = query.OrderBy(s => s.Enclosures.EnclosureId).ThenBy(s => s.AnimalName);
+                    query = query.OrderBy(s => s.Enclosure.EnclosureId).ThenBy(s => s.AnimalName);
                     break;
             
             }
            
-            return query.Include(u=>u.AnimalClass).Include(u => u.Enclosures)
+            return query.Include(u=>u.AnimalClass).Include(u => u.Enclosure)
                 .Skip((searchRequest.Page - 1) * searchRequest.PageSize)
                     .Take(searchRequest.PageSize);
         }
@@ -133,7 +133,7 @@ namespace ZooManagement.Repositories
             }
             if (!string.IsNullOrEmpty(searchRequest.EnclosureName))
             {
-                query = query.Where(e => e.Enclosures.EnclosureName.ToLower().Contains(searchRequest.EnclosureName.ToLower()));
+                query = query.Where(e => e.Enclosure.EnclosureName.ToLower().Contains(searchRequest.EnclosureName.ToLower()));
                             
             }
          return query.Count();   

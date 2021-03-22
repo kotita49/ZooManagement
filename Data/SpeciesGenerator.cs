@@ -95,9 +95,28 @@ namespace ZooManagement.Data
             return 2; 
 
         }
-
+        public static int GetZookeeperId(int EnclosureId)
+        {
+            switch (EnclosureId)
+            {
+                case 1:
+                    return 5;
+                case 2:
+                    return _random.Next(3, 6);
+                case 3:
+                    return _random.Next(2, 4);
+                case 4:
+                   
+                    return _random.Next(1,3); 
+                case 5:
+                    return 1;
+                default: 
+                    return 3;
+            }
+        }
         public static Animal CreateRandomAnimal(int index)
         {
+            int en_id=GetEnclosureId();
             return new Animal
             {
                 AnimalName = NamesGenerator.GetNames().Item1,
@@ -106,10 +125,8 @@ namespace ZooManagement.Data
                 DateOfBirth = DateGenerator.GetBirthDate(),
                 DateAcquired = DateGenerator.GetAcquiredDate(),
                 AnimalClassId = GetSpecies().Item3 +1,
-                EnclosureId = GetEnclosureId()
-                // AnimalClassification = (AnimalClassification)Enum.Parse(typeof(AnimalClassification), GetSpecies().Item2)
-                // AnimalClassification = (AnimalClassification)Enum.Parse(typeof(AnimalClassification), GetSpecies().Item2)
-                
+                EnclosureId = en_id,
+                ZookeeperId = GetZookeeperId(en_id)    
             };
         }
 

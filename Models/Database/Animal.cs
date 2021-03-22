@@ -33,7 +33,9 @@ namespace ZooManagement.Models.Database
         public AnimalClass AnimalClass { get; set; } 
         [ForeignKey("Enclosures")]      
         public int EnclosureId {get; set; }
-        public Enclosure Enclosures { get; set; } 
+        public Enclosure Enclosure { get; set; } 
+        [ForeignKey("Zookeepers")]
+        public int ZookeeperId { get; set; }
     }
 
 }
