@@ -23,5 +23,7 @@ namespace ZooManagement.Models.Request
         public DateTime DateOfBirth { get; set; }
       
         public DateTime DateAquired { get; set; }
+        [Required]
+        public string EnclosureName { get; set; }
     }
 }

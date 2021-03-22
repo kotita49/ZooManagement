@@ -43,11 +43,14 @@ namespace ZooManagement.Controllers
             {
                 return BadRequest(ModelState);
             }
+            Console.WriteLine(newAnimal.EnclosureName);
+        
+            var enclosure = _animals.GetByEnclosureName(newAnimal.EnclosureName);
+            var animal = _animals.Create(newAnimal, enclosure);
             
-            var animal = _animals.Create(newAnimal);
-
             var url = Url.Action("GetById", new { id = animal.AnimalId });
             var responseViewModel = new AnimalResponse(animal);
+
             return Created(url, responseViewModel);
         }
         [HttpGet("")]

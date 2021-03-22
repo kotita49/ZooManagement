@@ -30,7 +30,10 @@ namespace ZooManagement.Models.Database
         // public AnimalClassification AnimalClassification { get; set; }
         
         [JsonConverter(typeof(JsonStringEnumConverter))]
-        public AnimalClass AnimalClass { get; set; }       
+        public AnimalClass AnimalClass { get; set; } 
+        [ForeignKey("Enclosures")]      
+        public int EnclosureId {get; set; }
+        public Enclosure Enclosures { get; set; } 
     }
 
 }

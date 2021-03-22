@@ -69,6 +69,33 @@ namespace ZooManagement.Data
         {
             return Enumerable.Range(0, 100).Select(CreateRandomAnimal);
         }
+        public static int GetEnclosureId()
+        {
+            var randomNumber=_random.Next(0,117);
+            if (0 <= randomNumber && randomNumber <= 9)
+            {
+                return 1;
+            }
+            if (10 <= randomNumber && randomNumber <60)
+            {
+                return 2;
+            }
+            if (60 <= randomNumber && randomNumber <100)
+            {
+                return 3;
+            }
+            if (100 <= randomNumber && randomNumber <106)
+            {
+                return 4;
+            }
+            if (106 <= randomNumber && randomNumber <=117)
+            {
+                return 5;
+            }
+            return 2; 
+
+        }
+
         public static Animal CreateRandomAnimal(int index)
         {
             return new Animal
@@ -79,6 +106,7 @@ namespace ZooManagement.Data
                 DateOfBirth = DateGenerator.GetBirthDate(),
                 DateAcquired = DateGenerator.GetAcquiredDate(),
                 AnimalClassId = GetSpecies().Item3 +1,
+                EnclosureId = GetEnclosureId()
                 // AnimalClassification = (AnimalClassification)Enum.Parse(typeof(AnimalClassification), GetSpecies().Item2)
                 // AnimalClassification = (AnimalClassification)Enum.Parse(typeof(AnimalClassification), GetSpecies().Item2)
                 

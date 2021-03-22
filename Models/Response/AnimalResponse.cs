@@ -24,6 +24,7 @@ namespace ZooManagement.Models.Response
         public DateTime DateOfBirth => _animal.DateOfBirth;
 
         public DateTime DateAquired => _animal.DateAcquired;
+        public int EnclosureId => _animal.EnclosureId;
 
         // [JsonConverter(typeof (JsonStringEnumConverter))]
         public string AnimalClass => _animal.AnimalClass.AnimalClassification.ToString();

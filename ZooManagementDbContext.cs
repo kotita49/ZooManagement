@@ -10,6 +10,7 @@ namespace ZooManagement
         
         public DbSet<AnimalClass> AnimalClasses { get; set; }
         public DbSet<Animal> Animals { get; set; }
+        public DbSet<Enclosure> Enclosures { get; set; }
         
     }
 }

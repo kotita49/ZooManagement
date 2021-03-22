@@ -25,6 +25,8 @@ namespace ZooManagement.Request
         public DateTime? DateAcquired { get; set; }
 
         public string Order { get; set; }
+
+        public string EnclosureName { get; set; }
         
     }
 
